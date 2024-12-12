@@ -1,0 +1,7 @@
+image:
+  tag: "591c484a-development"
+ingress:
+  hosts:
+    - host: 'development.beep.ovh'
+      paths:
+        - /
