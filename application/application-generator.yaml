@@ -1,0 +1,33 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: beep-front-applicationset
+  namespace: argocd
+spec:
+  generators:
+  - pullRequest:
+      github:
+        owner: hugoponthieu
+        repo: poc-pr-generator-argocd
+      requeueAfterSeconds: 1800
+  template:
+    metadata:
+      name: 'front'
+    spec:
+      project: beep
+      source:
+        repoURL: https://github.com/hugoponthieu/poc-pr-generator-argocd.git
+        targetRevision: HEAD
+        path: beep-front
+        helm:
+          releaseName: beep-front-{{.number}}
+          valueFiles:
+            - 'statging.yaml'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'beep'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
